@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: lego
+    columns:
+      - name: theme_name
+        tests:
+          - not_null
+      - name: set_name
+        tests:
+          - not_null
+      - name: set_year
+        tests:
+          - not_null
