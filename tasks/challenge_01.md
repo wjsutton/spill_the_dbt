@@ -8,6 +8,12 @@ Set up a dbt project to analyze Lego data using a provided DuckDB database, SQL 
 - Necessary packages installed from `requirements.txt`
 - Basic knowledge of SQL and dbt
 
+Install all packages from `requirements.txt` with
+```
+pip install -r requirements.txt
+
+```
+
 ## Steps to Complete the Challenge
 
 ### Step 1: Navigate to the "spill_the_dbt" Folder
@@ -29,7 +35,7 @@ When prompted, select `duckdb` as your database.
 
 Move the `ch01_data` folder located in the `requirements` directory to your dbt project folder `challenge_01`:
 ```
-mv ../requirements/ch01_data challenge_01
+cp requirements/ch01_data challenge_01
 ```
 inspect the data in ch01_data with the python script `read_database.py`
 
@@ -43,8 +49,9 @@ challenge_01:
   outputs:
     dev:
       type: duckdb
-      path: "path_to_your_project_folder/challenge_01/ch01_data/lego.db"
+      path: "ch01_data/lego.db"
 ```
+Note: path is the filepath to your duckdb database file from where you run the dbt model.
 
 ### Step 5: Create a New Model
 
@@ -52,7 +59,7 @@ In your `challenge_01` dbt project, create a new model named `lego` and move the
 
 ```
 mkdir -p models/lego
-mv ../ch01_data/ch01_sql_script.sql models/lego/lego.sql
+cp ch01_data/ch01_sql_script.sql models/lego/lego.sql
 ```
 
 ### Step 6: Configure the Model in `dbt_project.yml`
@@ -72,10 +79,15 @@ Run the following command to ensure the model is correctly set up:
 ```
 dbt run -m lego
 ```
+If you encounter any errors fix them. 
+You should see:
+
+> Completed successfully
+> Done. PASS=1 WARN=0 ERROR=0 SKIP=0 TOTAL=1
 
 ### Step 8: Add Tests in schema.yml
 
-Create a `schema.yml` file in the `models/lego` directory to add tests ensuring the dataset has no null values:
+Create a `schema.yml` file in the `models/lego` directory to add tests ensuring the columns [theme_name, set_name, set_year] have no null values:
 
 ```
 version: 2
@@ -88,14 +100,32 @@ models:
           - not_null
 ```
 
-### Step 9: Add Ref Functions and Generate Docs
+### Step 9: Modularise the SQL and add Ref Functions
 
-Edit your model to use `ref` functions for the source tables and generate documentation:
+Edit the sql script so a table is created (materialized) for the UNIQUE_PARTS CTE and another table for the output of the query. This will involve splitting the script into two queries. 
+
+The SQL table created with take the name of the filename, this can be corrected using the alias function. 
+
+Edit your second query to use `ref` functions to join to the result of the first query (unique_parts):
 
 ```
 -- In models/lego/lego.sql
-select * from {{ ref('your_source_table') }} -- Adjust as necessary
+select * from {{ ref('unique_parts') }} -- Adjust as necessary
 ```
+
+Run the following command to ensure the model is correctly set up:
+```
+dbt run -m lego
+```
+
+If you encounter any errors fix them. 
+You should see:
+
+> Completed successfully
+> Done. PASS=2 WARN=0 ERROR=0 SKIP=0 TOTAL=2
+
+
+### Step 10: Generate Docs
 
 Generate the documentation site
 ```
@@ -103,20 +133,41 @@ dbt docs generate
 dbt docs serve
 ```
 
-### Step 10: Run the Entire Workflow
+Navigate to the lego table and verify it depends on unique_parts (the new SQL table you created in Step 9)
+
+### Step 11: Run the Entire Workflow
 
 Execute the following command to run the entire workflow:
 ```
 dbt build -m lego
 ```
+Note dbt run will create the tables, dbt build will run tests and create tables.
 
-###  Step 11: Verify the Table Creation
+If you encounter any errors fix them. 
+You should see:
 
-Use the provided Python script to verify that the table has been created correctly. 
+> Completed successfully
+> Done. PASS=5 WARN=0 ERROR=0 SKIP=0 TOTAL=5
+
+###  Step 12: Verify the Table Creation
+
+Use the provided Python script to verify that the tables have been created correctly. 
 ```
-python read_database.py
+python ch01_data/read_database.py
 ```
+You should see:
+- an output of 10 table names from the database
+- an output of the lego table showing lego themes, set, unique_part and a count of parts
+
 
 ### Task complete!
 
-Save your work to GitHub!
+This project was an introduction to working with dbt, we: 
+
+- Set up a dbt Project
+- Created and Configured a Model
+- And Ran and Tested the Model
+
+In future challenges we'll dive more indepth with the functionality. 
+
+Save your work to GitHub, and I'll see you in the next challenge!
