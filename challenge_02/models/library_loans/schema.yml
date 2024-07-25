@@ -1,0 +1,81 @@
+
+version: 2
+
+sources:
+  - name: library
+    schema: main
+    tables:
+      - name: books_factual
+      - name: books_fictional
+      - name: loans
+      - name: members
+
+models:
+  - name: stg_books
+    columns:
+      - name: book_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_members
+    columns:
+      - name: member_id
+        data_tests:
+          - not_null
+      - name: membership_tier
+        data_tests:
+          - accepted_values:
+              values: ['Bronze', 'Silver', 'Gold']
+      - name: member_name
+        data_tests:
+          - no_digits_in_column:
+              column_name: member_name
+              config:
+                severity: warn
+
+  - name: stg_loans
+    columns:
+      - name: loan_id
+        data_tests:
+          - not_null
+      - name: book_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_books')
+              field: book_id
+      - name: member_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_members')
+              field: member_id
+
+  - name: customer_withdrawls
+    columns:
+      - name: fee_applied
+        data_tests:
+          - positive_late_fees
+      - name: member_name
+        data_tests:
+          - no_digits_in_column:
+              column_name: member_name
+              config:
+                severity: warn
+
+  - name: customers_with_late_fees
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('solution')
+    columns:
+      - name: member_name
+        data_tests:
+          - cust_late_fees_1_row_per_cust
+          - no_digits_in_column:
+              column_name: member_name
+              config:
+                severity: warn
+
+seeds:
+  - name: solution
