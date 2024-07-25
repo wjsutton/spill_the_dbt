@@ -96,7 +96,7 @@ models:
   - name: lego
     columns:
       - name: column_name # replace with actual column name
-        tests:
+        data_tests:
           - not_null
 ```
 
@@ -104,7 +104,7 @@ models:
 
 Edit the sql script so a table is created (materialized) for the UNIQUE_PARTS CTE and another table for the output of the query. This will involve splitting the script into two queries. 
 
-The SQL table created with take the name of the filename, this can be corrected using the alias function. 
+The SQL table created will take the name of the filename, this can be corrected using the alias function. 
 
 Edit your second query to use `ref` functions to join to the result of the first query (unique_parts):
 
@@ -168,6 +168,6 @@ This project was an introduction to working with dbt, we:
 - Created and Configured a Model
 - And Ran and Tested the Model
 
-In future challenges we'll dive more indepth with the functionality. 
+In future challenges, we'll explore more of the functionality of dbt. 
 
 Save your work to GitHub, and I'll see you in the next challenge!
