@@ -6,6 +6,8 @@ These challenges generally follow the content for the [dbt Analytics Engineer Ce
 
 ## Getting Started
 
+**📺 [Installation walkthrough now available](https://youtu.be/rSI1VcSpXq0)**
+
 To work with these challenges, please follow the steps below:
 
 **1. Fork the Repository**
