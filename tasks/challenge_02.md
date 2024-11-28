@@ -5,14 +5,26 @@ Identify and fix issues in a dbt model that aggregates late fees for overdue lib
 
 ## Prerequisites
 
-- Python 3.7 or higher, dbt version 1.3 or higher
-- Necessary Python packages installed from `requirements.txt`
+- Ensure you have [Python](https://www.python.org/) installed on your machine that is compatible with dbt. Check [What version of Python can I use?](https://docs.getdbt.com/docs/core/pip-install)
+- A virtual environment setup and Python packages installed from `requirements.txt`
 - Basic knowledge of SQL, Python and dbt
 
-To install all required packages, run:
+**Create a virtual environment**
 ```
+python -m venv dbt-env
+```
+**Activate your virtual environment**
+Windows:
+```
+dbt-env\Scripts\activate
+```
+Mac / Linux
+```
+source dbt-env/bin/activate
+```
+**Install the required packages**
+``` bash
 pip install -r requirements.txt
-
 ```
 
 ## Steps to Complete the Challenge
