@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: lego
+    columns:
+      - name: theme_name # replace with actual column name
+        data_tests:
+          - not_null
+      - name: set_name
+        data_tests:
+          - not_null
+      - name: set_year
+        data_tests:
+          - not_null
