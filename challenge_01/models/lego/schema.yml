@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: lego
+    description: "check data quality for lego"
+    columns:
+      - name: theme_name
+        description: "ensure theme_name is not null"
+        data_tests:
+          - not_null
+      - name: set_name
+        description: "ensure set_name is not null"
+        data_tests:
+          - not_null
+      - name: set_year
+        description: "ensure set_year is not null"
+        data_tests:
+          - not_null
