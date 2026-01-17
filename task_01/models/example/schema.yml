@@ -1,0 +1,19 @@
+
+version: 2
+
+models:
+  - name: lego
+    description: "lego model"
+    columns:
+      - name: theme_name
+        description: "theme name"
+        data_tests:
+          - not_null
+      - name: set_name
+        description: "set name"
+        data_tests:
+          - not_null
+      - name: set_year
+        description: "set year"
+        data_tests:
+          - not_null
