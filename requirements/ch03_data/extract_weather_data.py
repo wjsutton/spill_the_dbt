@@ -46,7 +46,7 @@ def load_data_to_duckdb(df):
     """
     con = duckdb.connect('requirements/ch03_data/office_weather.db')
     con.execute("CREATE TABLE IF NOT EXISTS weather_data AS SELECT * FROM df LIMIT 0")
-    con.execute("INSERT INTO latest_weather_readings SELECT * FROM df")
+    con.execute("INSERT INTO weather_data SELECT * FROM df")
     con.close()
 
 
