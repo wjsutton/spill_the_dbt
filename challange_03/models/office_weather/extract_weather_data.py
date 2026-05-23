@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
 import duckdb
+import dbt
+
 
 def fetch_weather_data(latitude, longitude):
     """
@@ -16,6 +18,7 @@ def fetch_weather_data(latitude, longitude):
     response.raise_for_status()
     data = response.json()
     return data
+
 
 def flatten_weather_data(data, office_name):
     """
@@ -40,32 +43,28 @@ def flatten_weather_data(data, office_name):
 
     return df_current
 
-def load_data_to_duckdb(df):
-    """
-    Loads the DataFrame into a DuckDB table.
-    """
-    con = duckdb.connect('requirements/ch03_data/office_weather.db')
-    con.execute("CREATE TABLE IF NOT EXISTS weather_data AS SELECT * FROM df LIMIT 0")
-    con.execute("INSERT INTO weather_data SELECT * FROM df")
-    con.close()
 
+def model(dbt, session):
 
-# Read office locations from CSV
-office_df = pd.read_csv('requirements/ch03_data/office_locations.csv')
+    # Read office locations from CSV
+    office_df = dbt.ref('office_locations.csv').to_df()
 
-# Initialize an empty list to collect DataFrames
-df_list = []
+    # Initialize an empty list to collect DataFrames
+    df_list = []
 
-# Loop through each office and fetch weather data
-for office_name, latitude, longitude in zip(office_df['office'], office_df['lat'], office_df['long']):
-    print(f"Fetching data for {office_name} ({latitude}, {longitude})...")
-    data = fetch_weather_data(latitude, longitude)
-    df = flatten_weather_data(data, office_name)
-    df_list.append(df)
+    # Loop through each office and fetch weather data
+    for office_name, latitude, longitude in zip(office_df['office'], office_df['lat'], office_df['long']):
+        print(f"Fetching data for {office_name} ({latitude}, {longitude})...")
+        data = fetch_weather_data(latitude, longitude)
+        df = flatten_weather_data(data, office_name)
+        df_list.append(df)
 
-# Combine all DataFrames into one
-all_data_df = pd.concat(df_list, ignore_index=True)
+    # Combine all DataFrames into one
+    all_data_df = pd.concat(df_list, ignore_index=True)
+
+    return all_data_df
 
 # Load the combined DataFrame into DuckDB
-load_data_to_duckdb(all_data_df)
+
+
 print("All data has been successfully loaded into DuckDB.")

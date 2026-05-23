@@ -1,0 +1,22 @@
+varsion: 2
+
+seeds:
+  - name: office_locations
+    columns:
+      - name: latitude
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+            min_value: - 90
+            max_value: 90
+      - name: longitude
+        data_tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+            min_value: -180
+            max_value: 180
+models:
+  - name: extract_weather_data
+    config:
+      alias: latest_weather_readings
+

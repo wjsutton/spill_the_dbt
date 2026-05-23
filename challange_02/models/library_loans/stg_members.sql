@@ -1,0 +1,1 @@
+select distinct member_id, membership_tier from members where member_id is not NULL and membership_tier in ['Bronze', 'Silver', 'Gold']

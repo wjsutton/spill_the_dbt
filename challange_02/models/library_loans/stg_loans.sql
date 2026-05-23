@@ -1,0 +1,1 @@
+select distinct loan_id,book_id, member_id, late_fee from loans where loan_id is not null and member_id in (select member_id from {{ ref('stg_members') }})
